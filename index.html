@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutoring Assistant & Concept Maps</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="app-logged-out">
+        
+        <!-- ================= WELCOME / LOGIN SCREEN ================= -->
+        <section id="page-login" class="login-screen">
+            <div class="login-bg-glow"></div>
+            <div class="login-container">
+                <div class="login-branding">
+                    <div class="logo-icon">
+                        <i data-lucide="brain-circuit"></i>
+                    </div>
+                    <h1>EduMind AI</h1>
+                    <p class="tagline">Automated Subject-Specific Tutoring Assistant Utilizing Generative AI and Interactive Concept Maps</p>
+                </div>
+                
+                <div class="login-card">
+                    <div class="role-selector">
+                        <button type="button" class="role-btn active" data-role="student">
+                            <i data-lucide="graduation-cap"></i>
+                            <span>Student</span>
+                        </button>
+                        <button type="button" class="role-btn" data-role="faculty">
+                            <i data-lucide="shield-check"></i>
+                            <span>Faculty / Admin</span>
+                        </button>
+                    </div>
+
+                    <form id="login-form" class="auth-form">
+                        <h2 id="login-title">Student Sign In</h2>
+                        <p class="auth-subtitle">Enter your academic credentials to enter the workspace</p>
+                        
+                        <div class="form-group">
+                            <label for="username">Email or Username</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="user"></i>
+                                <input type="text" id="username" placeholder="student@university.edu" required value="alex.jones@university.edu">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="lock"></i>
+                                <input type="password" id="password" placeholder="••••••••" required value="password123">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>Sign In to Workspace</span>
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="login-divider">
+                        <span>or</span>
+                    </div>
+
+                    <div class="guest-action">
+                        <button type="button" id="btn-guest" class="btn btn-secondary btn-block">
+                            <i data-lucide="user-check"></i>
+                            <span>Continue as Guest Student</span>
+                        </button>
+                    </div>
+                    
+                    <p class="login-footer">College Capstone Project &copy; 2026</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MAIN APP WORKSPACE ================= -->
+        <main id="app-workspace" class="workspace-container">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo">
+                        <div class="mini-logo-icon">
+                            <i data-lucide="brain-circuit"></i>
+                        </div>
+                        <span>EduMind AI</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="user-avatar" id="user-avatar-badge">
+                        <span id="user-initials">AJ</span>
+                    </div>
+                    <div class="user-info">
+                        <h4 id="user-display-name">Alex Jones</h4>
+                        <span id="user-display-role" class="badge-role">Student</span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-item active" data-target="dashboard">
+                            <a href="#dashboard">
+                                <i data-lucide="layout-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-target="chat">
+                            <a href="#chat">
+                                <i data-lucide="message-square"></i>
+                                <span>AI Tutoring Chat</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-target="map">
+                            <a href="#map">
+                                <i data-lucide="network"></i>
+                                <span>Interactive Concept Map</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-target="resources">
+                            <a href="#resources">
+                                <i data-lucide="book-open"></i>
+                                <span>Learning Resources</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-target="quiz">
+                            <a href="#quiz">
+                                <i data-lucide="award"></i>
+                                <span>Quiz & Practice</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-target="progress">
+                            <a href="#progress">
+                                <i data-lucide="trending-up"></i>
+                                <span>Student Progress</span>
+                            </a>
+                        </li>
+                        <li class="nav-item faculty-only" data-target="faculty" style="display: none;">
+                            <a href="#faculty">
+                                <i data-lucide="settings"></i>
+                                <span>Faculty Panel</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button type="button" id="btn-logout" class="btn btn-logout-link">
+                        <i data-lucide="log-out"></i>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Top Status Header -->
+                <header class="top-header">
+                    <div class="header-left">
+                        <button type="button" id="sidebar-toggle" class="sidebar-toggle-btn">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        <div class="subject-selector-dropdown">
+                            <i data-lucide="library" class="subject-icon"></i>
+                            <select id="active-subject-select" class="subject-select">
+                                <option value="dbms">Database Management System (DBMS)</option>
+                                <option value="os">Operating Systems (OS)</option>
+                                <option value="cn">Computer Networks (CN)</option>
+                                <option value="python">Python Programming (PY)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="header-right">
+                        <div class="difficulty-picker">
+                            <label for="difficulty-select">Level:</label>
+                            <select id="difficulty-select">
+                                <option value="easy">Easy (Analogies)</option>
+                                <option value="medium" selected>Medium (Standard)</option>
+                                <option value="advanced">Advanced (Deep Technical)</option>
+                            </select>
+                        </div>
+                        <div class="streak-badge">
+                            <i data-lucide="flame" class="streak-fire"></i>
+                            <span id="streak-count">5 Days</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dynamic Page Container -->
+                <div class="content-body">
+
+                    <!-- ================= DASHBOARD PAGE ================= -->
+                    <div id="view-dashboard" class="page-view active">
+                        <div class="welcome-banner">
+                            <div class="banner-text">
+                                <h1 class="welcome-heading">Welcome Back, <span id="banner-username">Alex</span>!</h1>
+                                <p class="banner-sub">Let's continue mastering <strong id="banner-subject-name">Database Management Systems</strong>. You have completed 62% of the syllabus.</p>
+                            </div>
+                            <div class="banner-illustration">
+                                <i data-lucide="rocket"></i>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-grid">
+                            <!-- Left Section: Search & Recents -->
+                            <div class="dashboard-left">
+                                <div class="dashboard-card search-card">
+                                    <h3>Ask AI Tutor</h3>
+                                    <p>Enter any topic or question related to your active subject to get simulated explanations, quizzes, or maps.</p>
+                                    <form id="dashboard-search-form" class="dashboard-search">
+                                        <input type="text" id="dashboard-search-input" placeholder="e.g., Explain why BCNF is stricter than 3NF?" required>
+                                        <button type="submit" class="btn btn-primary btn-icon">
+                                            <i data-lucide="search"></i>
+                                            <span>Ask AI</span>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div class="dashboard-card recents-card">
+                                    <h3>Recently Viewed Concepts</h3>
+                                    <div class="recent-chips" id="recent-chips-container">
+                                        <!-- Javascript filled -->
+                                    </div>
+                                </div>
+
+                                <div class="dashboard-card subjects-card">
+                                    <h3>Academic Subject Workspaces</h3>
+                                    <div class="subjects-grid">
+                                        <div class="subject-card active" data-subj="dbms">
+                                            <div class="subject-card-header">
+                                                <div class="subj-icon dbms-icon"><i data-lucide="database"></i></div>
+                                                <span class="subj-badge">Active</span>
+                                            </div>
+                                            <h4>DBMS</h4>
+                                            <p>Relational Databases, Normalization, Transactions, Joins</p>
+                                            <div class="subject-progress">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar" style="width: 62%"></div>
+                                                </div>
+                                                <span>62% Complete</span>
+                                            </div>
+                                        </div>
+                                        <div class="subject-card" data-subj="os">
+                                            <div class="subject-card-header">
+                                                <div class="subj-icon os-icon"><i data-lucide="cpu"></i></div>
+                                            </div>
+                                            <h4>Operating Systems</h4>
+                                            <p>Processes, Threading, Deadlocks, Virtual Memory</p>
+                                            <div class="subject-progress">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar" style="width: 40%"></div>
+                                                </div>
+                                                <span>40% Complete</span>
+                                            </div>
+                                        </div>
+                                        <div class="subject-card" data-subj="cn">
+                                            <div class="subject-card-header">
+                                                <div class="subj-icon cn-icon"><i data-lucide="globe"></i></div>
+                                            </div>
+                                            <h4>Computer Networks</h4>
+                                            <p>TCP/IP, Routing Algorithms, DNS, Layer Architectures</p>
+                                            <div class="subject-progress">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar" style="width: 15%"></div>
+                                                </div>
+                                                <span>15% Complete</span>
+                                            </div>
+                                        </div>
+                                        <div class="subject-card" data-subj="python">
+                                            <div class="subject-card-header">
+                                                <div class="subj-icon py-icon"><i data-lucide="terminal"></i></div>
+                                            </div>
+                                            <h4>Python Programming</h4>
+                                            <p>OOP, Data Structures, Decorators, Generative scripting</p>
+                                            <div class="subject-progress">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar" style="width: 85%"></div>
+                                                </div>
+                                                <span>85% Complete</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Section: General Progress Analytics -->
+                            <div class="dashboard-right">
+                                <div class="dashboard-card progress-overview-card">
+                                    <h3>Learning Progress</h3>
+                                    <div class="overall-progress-circle">
+                                        <svg class="progress-ring" width="120" height="120">
+                                            <circle class="progress-ring-circle-bg" stroke="#e2e8f0" stroke-width="8" fill="transparent" r="50" cx="60" cy="60" />
+                                            <circle class="progress-ring-circle" id="dashboard-progress-ring" stroke="var(--primary)" stroke-width="8" fill="transparent" r="50" cx="60" cy="60" stroke-dasharray="314.16" stroke-dashoffset="119.38" />
+                                        </svg>
+                                        <div class="progress-circle-text">
+                                            <span class="percentage" id="dashboard-overall-percentage">62%</span>
+                                            <span class="label">Completed</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="stats-row">
+                                        <div class="stat-col">
+                                            <span class="stat-val" id="stats-mastered-topics">8 / 13</span>
+                                            <span class="stat-lbl">Topics Mastered</span>
+                                        </div>
+                                        <div class="stat-col font-divider"></div>
+                                        <div class="stat-col">
+                                            <span class="stat-val" id="stats-avg-score">82%</span>
+                                            <span class="stat-lbl">Quiz Average</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recommended-next-container">
+                                        <h4>Recommended Next Topic</h4>
+                                        <div class="recommendation-pill" id="dashboard-recommended-pill">
+                                            <i data-lucide="sparkles"></i>
+                                            <div>
+                                                <h5>BCNF (Boyce-Codd Normal Form)</h5>
+                                                <span>Builds on 3NF which you passed in yesterday's quiz</span>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-primary" id="btn-dashboard-start-recommended">Go</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dashboard-card prompt-card">
+                                    <h3>Quick-Start AI Queries</h3>
+                                    <div class="quick-prompts">
+                                        <button type="button" class="prompt-chip" data-query="Explain Normalization with a real-world example.">Explain Normalization</button>
+                                        <button type="button" class="prompt-chip" data-query="What is the difference between Inner Join and Outer Join?">Explain SQL Joins</button>
+                                        <button type="button" class="prompt-chip" data-query="Explain the ACID properties in database transactions.">Explain ACID Transactions</button>
+                                        <button type="button" class="prompt-chip" data-query="Why do we need indexing in databases?">Why use Indexing?</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= CHAT PAGE ================= -->
+                    <div id="view-chat" class="page-view">
+                        <div class="chat-layout">
+                            <!-- Sidebar: Discussion History -->
+                            <div class="chat-history-sidebar">
+                                <div class="history-header">
+                                    <h3>Recent Chats</h3>
+                                    <button type="button" id="btn-new-chat" class="btn btn-sm btn-outline"><i data-lucide="plus"></i> New</button>
+                                </div>
+                                <ul class="chat-history-list" id="chat-history-list">
+                                    <!-- Dynamic list of chats -->
+                                </ul>
+                            </div>
+
+                            <!-- Chat Window -->
+                            <div class="chat-window">
+                                <div class="chat-header">
+                                    <div class="ai-avatar">
+                                        <i data-lucide="sparkles"></i>
+                                    </div>
+                                    <div>
+                                        <h3>EduMind AI Tutor</h3>
+                                        <span class="status-indicator"><span class="dot"></span> Online - Ready to teach</span>
+                                    </div>
+                                </div>
+
+                                <div class="chat-messages-container" id="chat-messages-container">
+                                    <!-- Messages load dynamically -->
+                                    <div class="message message-ai">
+                                        <div class="message-avatar"><i data-lucide="sparkles"></i></div>
+                                        <div class="message-bubble">
+                                            <p>Hello! I am your AI Tutoring Assistant for <strong>Database Management Systems</strong>. Feel free to ask any question, or select a topic from the Dashboard. I can explain complex terms, generate quizzes, show maps, and provide real-world examples.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Typing Loader -->
+                                <div class="chat-typing-indicator" id="chat-typing-indicator" style="display: none;">
+                                    <div class="dot-bounce"></div>
+                                    <div class="dot-bounce"></div>
+                                    <div class="dot-bounce"></div>
+                                    <span>AI is synthesizing lesson...</span>
+                                </div>
+
+                                <!-- Context Actions Area (Appears after an AI response) -->
+                                <div class="chat-context-actions" id="chat-context-actions" style="display: none;">
+                                    <button type="button" class="btn btn-sm btn-purple" id="btn-explain-simply">
+                                        <i data-lucide="smile"></i> Explain Simply
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-purple" id="btn-give-example">
+                                        <i data-lucide="code-2"></i> Give Example
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-purple" id="btn-generate-quiz">
+                                        <i data-lucide="award"></i> Practice Quiz
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-purple" id="btn-chat-show-map">
+                                        <i data-lucide="network"></i> View Concept Map
+                                    </button>
+                                </div>
+
+                                <!-- Chat Input Panel -->
+                                <div class="chat-input-panel">
+                                    <!-- Dynamic Suggested Follow-ups -->
+                                    <div class="suggested-followups" id="suggested-followups">
+                                        <!-- Filled via JS -->
+                                    </div>
+                                    <form id="chat-form" class="chat-input-form">
+                                        <input type="text" id="chat-input" placeholder="Type your tutoring query here..." required>
+                                        <button type="submit" class="btn btn-primary btn-icon">
+                                            <i data-lucide="send"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= CONCEPT MAP PAGE ================= -->
+                    <div id="view-map" class="page-view">
+                        <div class="map-layout">
+                            <!-- Main Visualization Area -->
+                            <div class="map-visual-container">
+                                <div class="map-instructions-overlay">
+                                    <p><i data-lucide="info"></i> Click on a node to expand related concepts. Double-click to study in Chat. Drag/pan and search concepts.</p>
+                                </div>
+                                <div class="map-controls">
+                                    <div class="map-search-bar">
+                                        <i data-lucide="search"></i>
+                                        <input type="text" id="map-search-input" placeholder="Search concepts...">
+                                    </div>
+                                    <button type="button" class="btn btn-icon btn-secondary" id="btn-zoom-in" title="Zoom In"><i data-lucide="zoom-in"></i></button>
+                                    <button type="button" class="btn btn-icon btn-secondary" id="btn-zoom-out" title="Zoom Out"><i data-lucide="zoom-out"></i></button>
+                                    <button type="button" class="btn btn-icon btn-secondary" id="btn-map-reset" title="Reset View"><i data-lucide="refresh-cw"></i></button>
+                                </div>
+                                
+                                <!-- Concept Map Visual Engine Wrapper -->
+                                <div class="map-canvas-wrapper" id="map-canvas-wrapper">
+                                    <!-- SVG Node Map Dynamic Grid -->
+                                    <svg id="concept-map-svg" width="100%" height="100%" class="concept-map-svg">
+                                        <g id="map-zoom-group">
+                                            <g id="map-links"></g>
+                                            <g id="map-nodes"></g>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Concept Node Detail Sidebar Drawer -->
+                            <div class="concept-details-drawer active" id="concept-details-drawer">
+                                <div class="drawer-header">
+                                    <h3 id="drawer-concept-name">Normalization</h3>
+                                    <button type="button" class="btn-close-drawer" id="btn-close-drawer">&times;</button>
+                                </div>
+                                <div class="drawer-body">
+                                    <span class="badge badge-purple" id="drawer-concept-difficulty">Medium</span>
+                                    
+                                    <div class="drawer-section">
+                                        <h4>Academic Definition</h4>
+                                        <p id="drawer-concept-definition">The systematic process of organizing data in a database to reduce redundancy and improve data integrity.</p>
+                                    </div>
+                                    
+                                    <div class="drawer-section">
+                                        <h4>Simplified Explanation</h4>
+                                        <p id="drawer-concept-explanation">Imagine organizing a messy closet. Instead of putting shoes, shirts, and books in one giant pile, you group them by category and put them on labeled shelves. This makes things easier to find, prevents duplicates, and saves space.</p>
+                                    </div>
+                                    
+                                    <div class="drawer-section">
+                                        <h4>Related Topics</h4>
+                                        <div class="related-topics-chips" id="drawer-related-chips">
+                                            <!-- Dynamically filled -->
+                                        </div>
+                                    </div>
+
+                                    <div class="drawer-actions">
+                                        <button type="button" class="btn btn-primary btn-block" id="btn-drawer-explain-ai">
+                                            <i data-lucide="message-square"></i>
+                                            <span>Ask AI Tutor about this</span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-block" id="btn-drawer-take-quiz">
+                                            <i data-lucide="award"></i>
+                                            <span>Take Topic Quiz</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= LEARNING RESOURCES PAGE ================= -->
+                    <div id="view-resources" class="page-view">
+                        <div class="resources-layout">
+                            <div class="resources-header">
+                                <div>
+                                    <h2>Learning Resources</h2>
+                                    <p>Comprehensive syllabi, textbook notes, cheat sheets, and curated recommendations for <strong class="active-subject-text">DBMS</strong>.</p>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btn-download-notes">
+                                    <i data-lucide="download"></i>
+                                    <span>Download Workspace Notes</span>
+                                </button>
+                            </div>
+
+                            <div class="resources-grid">
+                                <!-- Left Column: Syllabus & Summaries -->
+                                <div class="resources-col">
+                                    <div class="dashboard-card">
+                                        <h3>Core Syllabus & Quick Notes</h3>
+                                        <div class="notes-accordion" id="notes-accordion">
+                                            <!-- JS generated according to active subject -->
+                                        </div>
+                                    </div>
+
+                                    <div class="dashboard-card">
+                                        <h3>Formula & Definition Cheat Sheet</h3>
+                                        <div class="cheat-sheet-table-wrapper" id="cheat-sheet-container">
+                                            <!-- Dynamic formulas -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Textbooks, PDFs, Video Links -->
+                                <div class="resources-col">
+                                    <div class="dashboard-card">
+                                        <h3>Recommended Reading & Textbooks</h3>
+                                        <ul class="textbooks-list" id="textbooks-list">
+                                            <!-- Filled via JS -->
+                                        </ul>
+                                    </div>
+
+                                    <div class="dashboard-card">
+                                        <h3>Video Lectures & Tutorials</h3>
+                                        <div class="video-grid" id="video-grid">
+                                            <!-- Filled via JS -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video Player Mock Popup -->
+                        <div class="video-modal" id="video-modal" style="display:none;">
+                            <div class="video-modal-content">
+                                <div class="video-modal-header">
+                                    <h4 id="video-modal-title">Relational Algebra - Video Tutorial</h4>
+                                    <button class="close-video-modal" id="btn-close-video">&times;</button>
+                                </div>
+                                <div class="video-player-simulation">
+                                    <div class="play-overlay">
+                                        <i data-lucide="play-circle"></i>
+                                        <span>Simulated Video Lecture Playback</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= QUIZ & PRACTICE PAGE ================= -->
+                    <div id="view-quiz" class="page-view">
+                        <div class="quiz-layout">
+                            <div class="quiz-setup-card" id="quiz-setup-card">
+                                <div class="quiz-setup-header">
+                                    <i data-lucide="award" class="quiz-decor-icon"></i>
+                                    <h2>Practice Quizzes</h2>
+                                    <p>Test your knowledge with simulated AI-generated questions. Select your parameters below.</p>
+                                </div>
+                                <div class="quiz-setup-options">
+                                    <div class="option-row">
+                                        <label>Select Quiz Topic</label>
+                                        <select id="quiz-topic-select">
+                                            <!-- Dynamically filled based on active subject -->
+                                        </select>
+                                    </div>
+                                    <div class="option-row">
+                                        <label>Difficulty level</label>
+                                        <div class="quiz-diff-selector">
+                                            <button class="quiz-diff-btn active" data-diff="easy">Easy</button>
+                                            <button class="quiz-diff-btn" data-diff="medium">Medium</button>
+                                            <button class="quiz-diff-btn" data-diff="advanced">Hard</button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-block btn-lg" id="btn-start-quiz">
+                                        <span>Generate Quiz with AI</span>
+                                        <i data-lucide="sparkles"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="quiz-active-card" id="quiz-active-card" style="display: none;">
+                                <div class="quiz-active-header">
+                                    <div>
+                                        <h3 id="quiz-active-title">Database Normalization Quiz</h3>
+                                        <p>Answer the 3 questions below. Double check your reasoning before submitting.</p>
+                                    </div>
+                                    <div class="quiz-progress-text" id="quiz-progress-indicator">Question 1 of 3</div>
+                                </div>
+
+                                <div class="quiz-questions-list" id="quiz-questions-list">
+                                    <!-- Dynamic Questions -->
+                                </div>
+
+                                <div class="quiz-actions">
+                                    <button type="button" class="btn btn-outline" id="btn-cancel-quiz">Cancel Quiz</button>
+                                    <button type="button" class="btn btn-primary" id="btn-submit-quiz">Submit Answers</button>
+                                </div>
+                            </div>
+
+                            <!-- Quiz Results View -->
+                            <div class="quiz-results-card" id="quiz-results-card" style="display: none;">
+                                <div class="results-header">
+                                    <h2>Quiz Results</h2>
+                                    <p id="quiz-results-sub">Congratulations on finishing your practice quiz!</p>
+                                </div>
+
+                                <div class="results-stats">
+                                    <div class="result-circle">
+                                        <span class="score-percent" id="quiz-score-percent">66%</span>
+                                        <span class="score-fraction" id="quiz-score-fraction">2/3 Correct</span>
+                                    </div>
+                                    <div class="result-feedback">
+                                        <h3 id="result-feedback-title">Good effort!</h3>
+                                        <p id="result-feedback-text">You have shown a good grasp of the core concepts, but might want to review normal forms again.</p>
+                                    </div>
+                                </div>
+
+                                <div class="quiz-breakdown" id="quiz-breakdown">
+                                    <!-- Dynamic review items with "Explain Wrong Answer" buttons -->
+                                </div>
+
+                                <div class="results-actions">
+                                    <button type="button" class="btn btn-secondary" id="btn-quiz-retry">Try Again</button>
+                                    <button type="button" class="btn btn-outline" id="btn-quiz-go-map">Study Concept Map</button>
+                                    <button type="button" class="btn btn-primary" id="btn-quiz-go-chat">Discuss in AI Chat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= STUDENT PROGRESS PAGE ================= -->
+                    <div id="view-progress" class="page-view">
+                        <div class="progress-page-layout">
+                            <div class="progress-summary-row">
+                                <div class="dashboard-card progress-stat-card">
+                                    <div class="stat-icon-wrapper purple"><i data-lucide="check-circle-2"></i></div>
+                                    <div>
+                                        <h3 id="prog-topics-completed">8 Topics</h3>
+                                        <p>Completed & Verified</p>
+                                    </div>
+                                </div>
+                                <div class="dashboard-card progress-stat-card">
+                                    <div class="stat-icon-wrapper blue"><i data-lucide="flame"></i></div>
+                                    <div>
+                                        <h3 id="prog-streak">5 Days</h3>
+                                        <p>Current Learning Streak</p>
+                                    </div>
+                                </div>
+                                <div class="dashboard-card progress-stat-card">
+                                    <div class="stat-icon-wrapper green"><i data-lucide="award"></i></div>
+                                    <div>
+                                        <h3 id="prog-avg-score">82%</h3>
+                                        <p>Quiz Accuracy</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress-details-grid">
+                                <div class="dashboard-card chart-card">
+                                    <h3>Weekly Study Hours</h3>
+                                    <p class="card-subtitle">Hours spent interacting with AI Tutor & Concept Maps</p>
+                                    <div class="svg-chart-container">
+                                        <svg viewBox="0 0 500 200" class="progress-svg-chart">
+                                            <!-- Background Gridlines -->
+                                            <line x1="40" y1="20" x2="480" y2="20" stroke="#f1f5f9" stroke-width="1" />
+                                            <line x1="40" y1="60" x2="480" y2="60" stroke="#f1f5f9" stroke-width="1" />
+                                            <line x1="40" y1="100" x2="480" y2="100" stroke="#f1f5f9" stroke-width="1" />
+                                            <line x1="40" y1="140" x2="480" y2="140" stroke="#f1f5f9" stroke-width="1" />
+                                            <line x1="40" y1="170" x2="480" y2="170" stroke="#cbd5e1" stroke-width="1" />
+                                            
+                                            <!-- Axis Labels -->
+                                            <text x="15" y="25" fill="#94a3b8" font-size="10">4h</text>
+                                            <text x="15" y="65" fill="#94a3b8" font-size="10">3h</text>
+                                            <text x="15" y="105" fill="#94a3b8" font-size="10">2h</text>
+                                            <text x="15" y="145" fill="#94a3b8" font-size="10">1h</text>
+                                            <text x="15" y="175" fill="#94a3b8" font-size="10">0h</text>
+
+                                            <!-- Chart Data Line & Area -->
+                                            <path d="M 60 170 Q 120 120 180 80 T 300 130 T 420 50 T 460 30" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" />
+                                            <path d="M 60 170 Q 120 120 180 80 T 300 130 T 420 50 T 460 30 L 460 170 L 60 170 Z" fill="url(#chart-gradient)" opacity="0.1" />
+
+                                            <!-- Data Points -->
+                                            <circle cx="60" cy="170" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="120" cy="130" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="180" cy="80" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="240" cy="100" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="300" cy="130" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="360" cy="90" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="420" cy="50" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+                                            <circle cx="460" cy="30" r="5" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+
+                                            <!-- X Axis Labels -->
+                                            <text x="50" y="190" fill="#94a3b8" font-size="10">Fri</text>
+                                            <text x="110" y="190" fill="#94a3b8" font-size="10">Sat</text>
+                                            <text x="170" y="190" fill="#94a3b8" font-size="10">Sun</text>
+                                            <text x="230" y="190" fill="#94a3b8" font-size="10">Mon</text>
+                                            <text x="290" y="190" fill="#94a3b8" font-size="10">Tue</text>
+                                            <text x="350" y="190" fill="#94a3b8" font-size="10">Wed</text>
+                                            <text x="410" y="190" fill="#94a3b8" font-size="10">Thu</text>
+                                            <text x="450" y="190" fill="#94a3b8" font-size="10">Today</text>
+
+                                            <!-- Gradients definitions -->
+                                            <defs>
+                                                <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stop-color="var(--primary)" />
+                                                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="dashboard-card progress-list-card">
+                                    <h3>Concept Completion Log</h3>
+                                    <div class="completion-log-list" id="completion-log-list">
+                                        <!-- JS generated list of items with completion ticks -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= FACULTY PANEL VIEW ================= -->
+                    <div id="view-faculty" class="page-view">
+                        <div class="faculty-layout">
+                            <div class="faculty-header">
+                                <h2>Faculty Curriculum Dashboard</h2>
+                                <p>Ingest lecture syllabus, notes, or research papers and parse concepts using simulated Generative NLP extraction.</p>
+                            </div>
+
+                            <div class="faculty-grid">
+                                <!-- Left Column: Syllabus Ingestion -->
+                                <div class="faculty-col">
+                                    <div class="dashboard-card upload-card">
+                                        <h3>Knowledge Base Ingestion</h3>
+                                        <p class="card-subtitle">Paste textbook text or lecture notes to extract concepts.</p>
+                                        
+                                        <div class="form-group">
+                                            <label for="faculty-subject-select">Target Subject Workspace</label>
+                                            <select id="faculty-subject-select" class="subject-select-full">
+                                                <option value="dbms">Database Management System (DBMS)</option>
+                                                <option value="os">Operating Systems (OS)</option>
+                                                <option value="cn">Computer Networks (CN)</option>
+                                                <option value="python">Python Programming (PY)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="notes-text-paste">Lecture Notes / Textbook Paragraph</label>
+                                            <textarea id="notes-text-paste" rows="8" placeholder="Paste textbook or syllabus content here... e.g. A Database Management System (DBMS) is software used to manage databases. An Entity-Relationship (ER) model is a high-level conceptual data model. SQL (Structured Query Language) is used to perform operations..."></textarea>
+                                        </div>
+
+                                        <button type="button" class="btn btn-primary btn-block" id="btn-extract-concepts">
+                                            <i data-lucide="cpu"></i>
+                                            <span>Extract NLP Concepts & Map Relations</span>
+                                        </button>
+
+                                        <!-- Extracting Progress Loader -->
+                                        <div class="extraction-progress" id="extraction-progress" style="display:none;">
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar animate-progress" id="extraction-progress-bar" style="width: 0%"></div>
+                                            </div>
+                                            <div class="progress-status">
+                                                <span id="extraction-status-text">Uploading content...</span>
+                                                <span id="extraction-percent">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="dashboard-card analytics-card">
+                                        <h3>Student Queries & Analytics</h3>
+                                        <div class="analytics-metrics">
+                                            <div class="metric-row">
+                                                <span>Most queried concept:</span>
+                                                <span class="bold">Boyce-Codd Normal Form (BCNF)</span>
+                                            </div>
+                                            <div class="metric-row">
+                                                <span>Common misunderstanding:</span>
+                                                <span class="bold color-red">3NF vs BCNF dependency preservation</span>
+                                            </div>
+                                            <div class="metric-row">
+                                                <span>Active students this week:</span>
+                                                <span class="bold">142 Students</span>
+                                            </div>
+                                            <div class="metric-row">
+                                                <span>Average concept maps explored:</span>
+                                                <span class="bold">6.4 maps per student</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: NLP Extracted Concepts & Mapping -->
+                                <div class="faculty-col">
+                                    <div class="dashboard-card extracted-concepts-card">
+                                        <h3>NLP Extracted Concepts & Relationships</h3>
+                                        <p class="card-subtitle">Approve, edit, or reject the extracted concept definitions and map links before publication.</p>
+                                        
+                                        <div class="table-container">
+                                            <table class="extracted-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Concept Name</th>
+                                                        <th>Suggested Parent Node</th>
+                                                        <th>Confidence</th>
+                                                        <th>Status / Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="extracted-tbody">
+                                                    <!-- Dynamic rows -->
+                                                    <tr>
+                                                        <td colspan="4" class="empty-table-msg">Paste text and click Extract to simulate NLP analysis.</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
